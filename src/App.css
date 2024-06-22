@@ -1,7 +1,6 @@
 * {
   box-sizing: border-box;
 }
-
 html, body, #root {
   width: 100%;
   height: 100%;
@@ -15,21 +14,18 @@ html, body, #root {
   user-select: none;
   overflow: hidden;
 }
-
 #root {
   overflow: hidden;
 }
-
 body {
   position: fixed;
   overflow: hidden;
   overscroll-behavior-y: none;
   font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
-  color: black;
+  color: #333;
   -webkit-font-smoothing: antialiased;
   background: #f0f0f0;
 }
-
 .app-container {
   position: fixed;
   width: 100%;
@@ -38,14 +34,12 @@ body {
   pointer-events: auto;
   touch-action: none;
 }
-
 .canvas-container {
   flex: 1;
   height: 100%;
   width: 100%;
-  position: relative; 
+  position: relative;
 }
-
 .App {
   top: 0;
   left: 0;
@@ -54,145 +48,183 @@ body {
   display: flex;
   overflow: hidden;
 }
-
-/* Styles for info panel */
 .info-panel {
   position: fixed;
-  top: 0;
-  right: 0;
+  top: 20px;
+  right: 20px;
   width: 300px;
-  height: 100vh;
-  background-color: #1a1a1a;
-  color: #f0f0f0;
+  background-color: #fff;
+  color: #333;
   padding: 20px;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-  overflow-y: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
   z-index: 10;
+  font-family: 'Roboto', sans-serif;
+  max-height: 90vh ;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
-
-.info-panel h2 {
-  color: #66b2ff;
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
-
-.info-panel p {
+.info-header h2 {
+  color: #333;
+  font-size: 24px;
+  margin: 0;
+}
+.close-button {
+  background-color: transparent;
+  border: none;
+  color: #999;
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.close-button:hover {
+  color: #333;
+}
+.info-content p {
   margin: 10px 0;
 }
-
-.info-panel label {
+.input-group {
+  margin-bottom: 15px;
+}
+.input-group label {
   display: block;
-  margin: 10px 0 5px;
-  color: #66b2ff;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 5px;
 }
-
-.info-panel input[type="color"],
-.info-panel input[type="range"],
-.info-panel input[type="number"],
-.info-panel select {
+.input-group input[type="color"],
+.input-group input[type="range"],
+.input-group input[type="number"],
+.input-group select {
   width: 100%;
-  padding: 5px;
-  margin: 5px 0 15px;
-  border: none;
-  border-radius: 5px;
-  background-color: #333;
-  color: #f0f0f0;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  background-color: #f5f5f5;
+  transition: border-color 0.3s ease;
 }
-
-.info-panel input[type="checkbox"] {
-  margin-right: 10px;
+.input-group input[type="color"]:focus,
+.input-group input[type="range"]:focus,
+.input-group input[type="number"]:focus,
+.input-group select:focus {
+  outline: none;
+  border-color: #007bff;
 }
-
-.info-panel button {
+.input-group input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.checkmark {
+  position: relative;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+  border-radius: 4px;
+  vertical-align: middle;
+  transition: background-color 0.3s ease;
+}
+.input-group input[type="checkbox"]:checked ~ .checkmark {
+  background-color: #007bff;
+}
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+.input-group input[type="checkbox"]:checked ~ .checkmark:after {
+  display: block;
+}
+.checkmark + label {
+  margin-left: 10px;
+  vertical-align: middle;
+}
+.export-button {
   display: block;
   width: 100%;
   padding: 10px;
-  margin: 20px 0;
   border: none;
-  border-radius: 5px;
-  background-color: #66b2ff;
-  color: #1a1a1a;
-  cursor: pointer;
-}
-
-.info-panel button:hover {
-  background-color: #558bcc;
-}
-
-.info-close .close-button {
-  background-color: transparent;
+  border-radius: 4px;
+  background-color: #007bff;
   color: #fff;
-  border: none;
-  font-size: 0.8rem;
-  padding: 3px 5px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  text-align: left;
-  display: inline-block;
-  margin: 0;
-  text-decoration: none;
+  transition: background-color 0.3s ease;
 }
-
-.info-close .close-button:hover {
-  color: #66b2ff;
+.export-button:hover {
+  background-color: #0056b3;
 }
-
-/* Styles for containers */
 .import-container,
 .export-container,
 .cloud-container,
 .cloud-export-container {
   position: fixed;
   left: 20px;
-  background-color: #1a1a1a;
+  background-color: #fff;
   padding: 10px;
   border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   z-index: 2000;
+  font-family: 'Roboto', sans-serif;
 }
-
 .import-container {
   bottom: 20px;
 }
-
 .export-container {
   bottom: 40px;
 }
-
 .cloud-container {
   bottom: 70px;
 }
-
 .cloud-export-container {
-  bottom: 115px; /* Adjusted for placement */
+  bottom: 115px;
 }
-
 .import-container input[type="file"],
 .export-container input[type="file"],
 .cloud-container input[type="file"],
 .cloud-export-container input[type="file"] {
-  color: #f0f0f0;
+  color: #333;
 }
-
 .import-container input[type="file"]::-webkit-file-upload-button,
 .export-container input[type="file"]::-webkit-file-upload-button,
 .cloud-container input[type="file"]::-webkit-file-upload-button,
 .cloud-export-container input[type="file"]::-webkit-file-upload-button {
   padding: 5px 10px;
   border: none;
-  border-radius: 5px;
-  background-color: #66b2ff;
-  color: #1a1a1a;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
-
 .import-container input[type="file"]::-webkit-file-upload-button:hover,
 .export-container input[type="file"]::-webkit-file-upload-button:hover,
 .cloud-container input[type="file"]::-webkit-file-upload-button:hover,
 .cloud-export-container input[type="file"]::-webkit-file-upload-button:hover {
-  background-color: #558bcc;
+  background-color: #0056b3;
 }
-
-/* Additional styles for cloud and import containers */
 .cloud-container label,
 .import-container label,
 .cloud-export-container label {
-  color: #ffffff; /* Set the color to white */
+  color: #333;
 }

@@ -4,11 +4,11 @@ import { OrbitControls, Stats, Environment, Lightformer, MeshReflectorMaterial }
 import { saveAs } from 'file-saver';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import * as THREE from 'three';
+import './App.css';
 import Scene from './Scene';
 import InfoPanel from './InfoPanel';
 import ImportContainer from './ImportContainer';
 import CloudContainer from './CloudContainer';
-import './App.css';
 import CloudExportContainer from './CloudExportContainer';
 
 export default function App() {
@@ -18,7 +18,6 @@ export default function App() {
   const sceneRef = useRef();
   const selectedObjectRef = useRef(null);
   const [highlightedMesh, setHighlightedMesh] = useState(null);
-
   useEffect(() => {
     if (selectedObject && selectedObject.material) {
       selectedObjectRef.current = selectedObject;
@@ -30,7 +29,6 @@ export default function App() {
     setSelectedObjectState(mesh.uuid);
     setShowInfoPanel(true);
   };
-
   const handleObjectHover = (mesh) => {
     if (mesh && mesh !== highlightedMesh) {
       if (highlightedMesh) {
@@ -45,18 +43,15 @@ export default function App() {
       setHighlightedMesh(null);
     }
   };
-
   const updateSelectedObject = () => {
     setSelectedObjectState((prev) => prev + 1);
   };
-
   const handleColorChange = (object, color) => {
     const newMaterial = object.material.clone();
     newMaterial.color.set(color);
     object.material = newMaterial;
     updateSelectedObject();
   };
-
   const handleMaterialChange = (object, newMaterialType) => {
     let newMaterial;
     switch (newMaterialType) {
@@ -90,56 +85,48 @@ export default function App() {
     object.material = newMaterial;
     updateSelectedObject();
   };
-
   const handleWireframeToggle = (object) => {
     const newMaterial = object.material.clone();
     newMaterial.wireframe = !newMaterial.wireframe;
     object.material = newMaterial;
     updateSelectedObject();
   };
-
   const handleTransparentToggle = (object) => {
     const newMaterial = object.material.clone();
     newMaterial.transparent = !newMaterial.transparent;
     object.material = newMaterial;
     updateSelectedObject();
   };
-
   const handleOpacityChange = (object, value) => {
     const newMaterial = object.material.clone();
     newMaterial.opacity = value;
     object.material = newMaterial;
     updateSelectedObject();
   };
-
   const handleDepthTestToggle = (object) => {
     const newMaterial = object.material.clone();
     newMaterial.depthTest = !newMaterial.depthTest;
     object.material = newMaterial;
     updateSelectedObject();
   };
-
   const handleDepthWriteToggle = (object) => {
     const newMaterial = object.material.clone();
     newMaterial.depthWrite = !newMaterial.depthWrite;
     object.material = newMaterial;
     updateSelectedObject();
   };
-
-  const handleAlphaHashToggle = (object) => {
+  const handleAlphaTestToggle = (object) => {
     const newMaterial = object.material.clone();
-    newMaterial.alphaHash = !newMaterial.alphaHash;
+    newMaterial.alphaTest = newMaterial.alphaTest === 0 ? 0.5 : 0;
     object.material = newMaterial;
     updateSelectedObject();
   };
-
   const handleSideChange = (object, value) => {
     const newMaterial = object.material.clone();
     newMaterial.side = value;
     object.material = newMaterial;
     updateSelectedObject();
   };
-
   const handleFlatShadingToggle = (object) => {
     const newMaterial = object.material.clone();
     newMaterial.flatShading = !newMaterial.flatShading;
@@ -147,7 +134,6 @@ export default function App() {
     object.material = newMaterial;
     updateSelectedObject();
   };
-
   const handleVertexColorsToggle = (object) => {
     const newMaterial = object.material.clone();
     newMaterial.vertexColors = newMaterial.vertexColors === THREE.NoColors ? THREE.VertexColors : THREE.NoColors;
@@ -155,7 +141,6 @@ export default function App() {
     object.material = newMaterial;
     updateSelectedObject();
   };
-
   const handleGeometryChange = (object, newGeometryType) => {
     let newGeometry;
     switch (newGeometryType) {
@@ -174,20 +159,16 @@ export default function App() {
     object.geometry = newGeometry;
     updateSelectedObject();
   };
-
   const handleSizeChange = (object, size) => {
     object.scale.set(size, size, size);
     updateSelectedObject();
   };
-
   const handleCloseInfoPanel = () => {
     setShowInfoPanel(false);
     setSelectedObject(null);
   };
-
   const handleExport = () => {
     const exporter = new GLTFExporter();
-
     const options = {
       binary: true,
       trs: false,
@@ -196,7 +177,6 @@ export default function App() {
       embedImages: true,
       maxTextureSize: 1024 || Infinity,
     };
-
     exporter.parse(sceneRef.current, (result) => {
       if (result instanceof ArrayBuffer) {
         saveAs(new Blob([result], { type: 'application/octet-stream' }), 'scene.glb');
@@ -206,7 +186,6 @@ export default function App() {
       }
     }, options);
   };
-
   const handleImport = (importedScene) => {
     sceneRef.current.clear();
     sceneRef.current.add(importedScene);
@@ -228,11 +207,8 @@ export default function App() {
         <OrbitControls />
         <Stats />
         <Environment preset="city" />
-        
         <Environment background>
-                    
                     <color attach="background" args={["#15151a"]} />
-
                     <Lightformer intensity={1.5} rotation-x={Math.PI / 2} position={[0, 4, -9]} scale={[10, 1, 1]} />
                     <Lightformer intensity={1} rotation-x={Math.PI / 2} position={[0, 4, -6]} scale={[10, 1, 1]} />
                     <Lightformer intensity={1.5} rotation-x={Math.PI / 2} position={[0, 4, -3]} scale={[10, 1, 1]} />
@@ -240,9 +216,6 @@ export default function App() {
                     <Lightformer intensity={1.5} rotation-x={Math.PI / 2} position={[0, 4, 3]} scale={[10, 1, 1]} />
                     <Lightformer intensity={1} rotation-x={Math.PI / 2} position={[0, 4, 6]} scale={[10, 1, 1]} />
                     <Lightformer intensity={1.5} rotation-x={Math.PI / 2} position={[0, 4, 9]} scale={[10, 1, 1]} />
-                    {/* Key */}
-                    {/* <Lightformer form="ring" color="red" intensity={10} scale={2} position={[10, 7, 10]} onUpdate={(self) => self.lookAt(0, 0, 0)} /> */}
-                    
                 </Environment>
                 <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.2, 0]} scale={[100, 100, 1]}>
                     <planeGeometry args={[100, 100]} />
@@ -262,7 +235,6 @@ export default function App() {
         <ambientLight />
         <directionalLight intensity={7.0}/>
         <pointLight position={[10, 10, 10]} />
-        
       </Canvas>
       {showInfoPanel && (
         <InfoPanel
@@ -274,7 +246,7 @@ export default function App() {
           onOpacityChange={handleOpacityChange}
           onDepthTestToggle={handleDepthTestToggle}
           onDepthWriteToggle={handleDepthWriteToggle}
-          onAlphaHashToggle={handleAlphaHashToggle}
+          onAlphaTestToggle={handleAlphaTestToggle}
           onSideChange={handleSideChange}
           onFlatShadingToggle={handleFlatShadingToggle}
           onVertexColorsToggle={handleVertexColorsToggle}
@@ -285,11 +257,9 @@ export default function App() {
         />
       )}
       <div className="button-container">
-        
         <ImportContainer onImport={handleImport} />
         <CloudContainer onImport={handleImport} />
       </div>
-      
     </div>
   );
 }

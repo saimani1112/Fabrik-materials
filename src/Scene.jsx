@@ -7,26 +7,21 @@ const path = "/sample/chicken_little.glb";
 const { scene: gltfScene } = useGLTF(path, true, loader => {
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
-loader.setDRACOLoader(dracoLoader);
-});
-
+loader.setDRACOLoader(dracoLoader);});
 const handlePointerOver = (e) => {
 e.stopPropagation();
 onObjectHover(e.object);
 };
-
 const handlePointerOut = () => {
 onObjectHover(null);
 };
-
 return (
 <primitive
 ref={ref}
 object={gltfScene}
 onPointerUp={(e) => {
 e.stopPropagation();
-onObjectClick(e.object);
-}}
+onObjectClick(e.object);}}
 onPointerOver={handlePointerOver}
 onPointerOut={handlePointerOut}
 />

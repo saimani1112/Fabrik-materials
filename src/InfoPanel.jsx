@@ -11,7 +11,7 @@ function InfoPanel({
   onOpacityChange,
   onDepthTestToggle,
   onDepthWriteToggle,
-  onAlphaHashToggle,
+  onAlphaTestToggle,
   onSideChange,
   onFlatShadingToggle,
   onVertexColorsToggle,
@@ -20,7 +20,6 @@ function InfoPanel({
   onExport,
 }) {
   if (!object) return null;
-
   const { geometry, material, name } = object;
   const materialTypes = [
     'MeshBasicMaterial',
@@ -42,164 +41,163 @@ function InfoPanel({
     { label: 'Cube', value: 'BoxGeometry' },
     { label: 'Sphere', value: 'SphereGeometry' },
   ];
-
-  return (
+return (
     <div className="info-panel">
-      <div className="info-close">
+      <div className="info-header">
+        <h2>Info Panel</h2>
         <button className="close-button" onClick={onClose}>
-            X
+          &times;
         </button>
       </div>
-      <div className="info-header">
-        
-        <h2>Info Panel</h2>
-        
-      </div>
-
-      <p><strong>Name:</strong> {name ? name : 'Unnamed'}</p>
-      <p><strong>Type:</strong> {geometry.type}</p>
-      <p><strong>Material:</strong> {material.type}</p>
-      {material && (
-        <div>
-          <label>Color</label>
+      <div className="info-content">
+        <p><strong>Name:</strong> {name ? name : 'Unnamed'}</p>
+        <p><strong>Type:</strong> {geometry.type}</p>
+        <p><strong>Material:</strong> {material.type}</p>
+        {material && (
+          <div className="input-group">
+            <label>Color</label>
+            <input
+              type="color"
+              value={`#${material.color ? material.color.getHexString() : 'ffffff'}`}
+              onChange={(e) => onColorChange(object, e.target.value)}
+            />
+          </div>
+        )}
+      <div className="input-group">
+          <label>Material</label>
+          <select value={material.type} onChange={(e) => onMaterialChange(object, e.target.value)}>
+            {materialTypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
+      <div className="input-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={material.wireframe}
+              onChange={() => onWireframeToggle(object)}
+            />
+            <span className="checkmark"></span>
+            Wireframe
+          </label>
+        </div>
+      <div className="input-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={material.transparent}
+              onChange={() => onTransparentToggle(object)}
+            />
+            <span className="checkmark"></span>
+            Transparent
+          </label>
+        </div>
+        {material.transparent && (
+          <div className="input-group">
+            <label>Opacity</label>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={material.opacity}
+              onChange={(e) => onOpacityChange(object, parseFloat(e.target.value))}
+            />
+          </div>
+        )}
+        <div className="input-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={material.depthTest}
+              onChange={() => onDepthTestToggle(object)}
+            />
+            <span className="checkmark"></span>
+            Depth Test
+          </label>
+        </div>
+        <div className="input-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={material.depthWrite}
+              onChange={() => onDepthWriteToggle(object)}
+            />
+            <span className="checkmark"></span>
+            Depth Write
+          </label>
+        </div>
+        <div className="input-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={object.material.alphaTest > 0}
+              onChange={() => onAlphaTestToggle(object)}
+            />
+            <span className="checkmark"></span>
+            Alpha Hash
+          </label>
+        </div>
+        <div className="input-group">
+          <label>Side</label>
+          <select
+            value={material.side}
+            onChange={(e) => onSideChange(object, parseInt(e.target.value))}
+          >
+            {sideOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="input-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={material.flatShading}
+              onChange={() => onFlatShadingToggle(object)}
+            />
+            <span className="checkmark"></span>
+            Flat Shading
+          </label>
+        </div>
+        <div className="input-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={material.vertexColors !== THREE.NoColors}
+              onChange={() => onVertexColorsToggle(object)}
+            />
+            <span className="checkmark"></span>
+            Vertex Colors
+          </label>
+        </div>
+        <div className="input-group">
+          <label>Geometry</label>
+          <select value={geometry.type} onChange={(e) => onGeometryChange(object, e.target.value)}>
+            {geometryOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="input-group">
+          <label>Size</label>
           <input
-            type="color"
-            value={`#${material.color ? material.color.getHexString() : 'ffffff'}`}
-            onChange={(e) => onColorChange(object, e.target.value)}
+            type="number"
+            step="0.1"
+            value={object.scale.x}
+            onChange={(e) => onSizeChange(object, parseFloat(e.target.value))}
           />
         </div>
-      )}
-
-      <div>
-        <label>Material</label>
-        <select value={material.type} onChange={(e) => onMaterialChange(object, e.target.value)}>
-          {materialTypes.map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={material.wireframe}
-            onChange={() => onWireframeToggle(object)}
-          />
-          Wireframe
-        </label>
-      </div>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={material.transparent}
-            onChange={() => onTransparentToggle(object)}
-          />
-          Transparent
-        </label>
-      </div>
-      {material.transparent && (
-        <div>
-          <label>Opacity</label>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={material.opacity}
-            onChange={(e) => onOpacityChange(object, parseFloat(e.target.value))}
-          />
-        </div>
-      )}
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={material.depthTest}
-            onChange={() => onDepthTestToggle(object)}
-          />
-          Depth Test
-        </label>
-      </div>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={material.depthWrite}
-            onChange={() => onDepthWriteToggle(object)}
-          />
-          Depth Write
-        </label>
-      </div>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={material.alphaHash}
-            onChange={() => onAlphaHashToggle(object)}
-          />
-          Alpha Hash
-        </label>
-      </div>
-      <div>
-        <label>Side</label>
-        <select
-          value={material.side}
-          onChange={(e) => onSideChange(object, parseInt(e.target.value))}
-        >
-          {sideOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={material.flatShading}
-            onChange={() => onFlatShadingToggle(object)}
-          />
-          Flat Shading
-        </label>
-      </div>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={material.vertexColors !== THREE.NoColors}
-            onChange={() => onVertexColorsToggle(object)}
-          />
-          Vertex Colors
-        </label>
-      </div>
-      <div>
-        <label>Geometry</label>
-        <select value={geometry.type} onChange={(e) => onGeometryChange(object, e.target.value)}>
-          {geometryOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label>Size</label>
-        <input
-          type="number"
-          step="0.1"
-          value={object.scale.x}
-          onChange={(e) => onSizeChange(object, parseFloat(e.target.value))}
-        />
-      </div>
-      <div>
-        <button onClick={onExport}>Export</button>
+        <button className="export-button" onClick={onExport}>Export</button>
       </div>
     </div>
   );
 }
-
 export default InfoPanel;

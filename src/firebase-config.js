@@ -1,5 +1,5 @@
-import { initializeApp } from 'firebase/app';
-import { getStorage } from 'firebase/storage';
+import { initializeApp } from "@firebase/app";
+import { getStorage } from "@firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDcwt49_muMVkG3f5nIX8RFTJY6k6fLsck",
@@ -11,5 +11,5 @@ const firebaseConfig = {
   measurementId: "G-MK2RSPTNHT"
 };
 const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
+const storage = getStorage(app, "materials-7b166.appspot.com");
 export { storage };
